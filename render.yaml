@@ -1,0 +1,35 @@
+services:
+  - type: web
+    name: noble-prism-backend
+    runtime: docker
+    rootDir: backend
+    plan: starter
+    healthCheckPath: /health
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: CORS_ORIGINS
+        sync: false
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: OPENROUTER_MODEL
+        value: deepseek/deepseek-chat-v3
+      - key: OPENROUTER_TIMEOUT_SECONDS
+        value: "12"
+      - key: OPENROUTER_MAX_RETRIES
+        value: "2"
+
+  - type: web
+    name: noble-prism-frontend
+    runtime: node
+    rootDir: .
+    buildCommand: npm ci && npm run build
+    startCommand: node .output/server/index.mjs
+    plan: starter
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: VITE_API_URL
+        sync: false
